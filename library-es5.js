@@ -16,7 +16,8 @@ let arrayExtensionsES5 = {
   },
 
   map(callback) {
-    return map(this.array, callback);
+    this.array = map(this.array, callback);
+    return this;
   },
 
   reduce(callback, initialValue) {
@@ -98,7 +99,6 @@ function filter(array, callback) {
 
 function foreach(array, callback) {
   for (let i = 0; i < array.length; i++) {
-    array[i] = callback(array[i]);
+    callback(array[i]);
   }
-  return array;
 }

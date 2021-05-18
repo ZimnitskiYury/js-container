@@ -1,3 +1,7 @@
 import arrayExtensions from "./library"
 
-arrayExtensions.chain([1,2,3,4,5,6]).value();
+let arr = [1, 2, 3, 4];
+
+console.log(take(arr, 2));
+console.log(arrayExtensions.chain(arr).take(2).value())
+console.log(arr);
