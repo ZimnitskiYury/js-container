@@ -1,27 +1,43 @@
-function take(array, n) {
-    if (n >= array.length) {
-        return array;
-    } else {
-        return array.slice(0, n);
+let arrayExtensions = {
+    array: [],
+    chain(inputArray) {
+        this.array = inputArray.slice();
+        return this;
+    },
+
+    take(n) {
+        if (n >= this.array.length) {
+            return this;
+        } else {
+            this.array = this.array.slice(0, n);
+            return this;
+        }
+    },
+
+    skip(n) {
+        this.array = this.array.slice(n, array.length);
+        return this;
+    },
+
+    map(callback) {
+        this.array = this.array.map(callback);
+        return this;
+    },
+
+    reduce(callback, initialValue = 0) {
+        this.array = this.array.reduce(callback, initialValue);
+    },
+
+    filter(callback) {
+        this.array = this.array.filter(callback);
+        return this;
+    },
+
+    foreach(callback) {
+        this.array = this.array.forEach(callback);
+        return this;
+    },
+    value() {
+        return this.array;
     }
-}
-
-function skip(array, n) {
-    return array.slice(n, array.length)
-}
-
-function map(array, callback) {
-    return array.map(callback);
-}
-
-function reduce(array, callback, initialValue = 0) {
-    return array.reduce(callback, initialValue);
-}
-
-function filter(array, callback) {
-    return array.filter(callback);
-}
-
-function foreach(array, callback) {
-    return array.forEach(callback);
 }
