@@ -1,62 +1,59 @@
-export let arrayExtensions = {
-  array: [],
-
+let arrayExtensions = {
+  funcArray: [],
+  tempArray: [],
   chain(inputArray) {
-    this.array = inputArray.slice();
-    return this;
+    arrayExtensions.tempArray = inputArray.slice();
+    return new Proxy(arrayExtensions, {
+      get: function (target, propKey, receiver) {
+        if (propKey == "value") {
+          return function () {
+            for (let item of target.funcArray) {
+              let func = item.func;
+              let args = Array.from(item.args);
+              args.unshift(target.tempArray);
+              target.tempArray = func.apply(target, args);
+            }
+            return target.tempArray;
+          };
+        } else {
+          let propValue = target[propKey];
+          if (typeof propValue != "function") {
+            return propValue;
+          } else {
+            return function () {
+              target.funcArray.push({
+                func: propValue,
+                args: arguments,
+              });
+              return this;
+            };
+          }
+        }
+      },
+    });
   },
 
-  take(n) {
-    this.array = take(this.array, n);
-    return this;
+  take(array, n) {
+    return array.slice(0, n);
   },
 
-  skip(n) {
-    this.array = skip(this.array, n);
-    return this;
+  skip(array, n) {
+    return array.slice(n);
   },
 
-  map(callback) {
-    this.array = map(this.array, callback);
-    return this;
+  map(array, callback) {
+    return array.map(callback);
   },
 
-  reduce(callback, initialValue) {
-    return reduce(this.array, callback, initialValue);
+  reduce(array, callback, initialValue = 0) {
+    return array.reduce(callback, initialValue);
   },
 
-  filter(callback) {
-    return filter(this.array, callback);
+  filter(array, callback) {
+    return array.filter(callback);
   },
 
-  foreach(callback) {
-    foreach(this.array, callback);
-  },
-  value() {
-    return this.array;
+  foreach(array, callback) {
+    array.forEach(callback);
   },
 };
-
-function take(array, n) {
-  return array.slice(0, n);
-}
-
-function skip(array, n) {
-  return array.slice(n);
-}
-
-function map(array, callback) {
-  return array.map(callback);
-}
-
-function reduce(array, callback, initialValue = 0) {
-  return array.reduce(callback, initialValue);
-}
-
-function filter(array, callback) {
-  return array.filter(callback);
-}
-
-function foreach(array, callback) {
-  array.forEach(callback);
-}
