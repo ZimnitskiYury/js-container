@@ -3,6 +3,7 @@ let arrayExtensions = {
   tempArray: [],
   chain(inputArray) {
     arrayExtensions.tempArray = inputArray.slice();
+    arrayExtensions.funcArray = [];
     return new Proxy(arrayExtensions, {
       get: function (target, propKey, receiver) {
         if (propKey == "value") {
